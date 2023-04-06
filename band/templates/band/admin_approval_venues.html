@@ -1,0 +1,39 @@
+{% extends 'band/base.html' %}
+
+{% block content%}
+<div class='container'>
+<h1>Admin venue approval</h1>
+<br/><br/>
+<form action="" method=POST>
+	{%csrf_token%}
+	<table class="table">
+	  <thead>
+	    <tr>
+	      <th scope="col">Venue name</th>
+	      <th scope="col">Approved</th>
+	    </tr>
+	  </thead>
+	  <tbody>
+	  	{%for venue in venue_list%}
+	  	<tr>
+	  		<td>{{venue}}</td>
+	  		<td>
+	  			{%if venue.approved%}
+	  			<div class="form-check">
+	  				<input class="form-check-input" type="checkbox" checked = "checked" value={{venue.id}} name="boxes">
+	  			</div>
+	  			{%else%}
+	  			<div class="form-check">
+	  				<input class="form-check-input" type="checkbox" value={{venue.id}} name="boxes">
+	  			</div>
+	  			{%endif%}
+	  		</td>
+	  	</tr>
+	  	{%endfor%}
+	  </tbody>
+	</table>
+	<br/>
+	<div class="mb-3"><button class="btn btn-primary d-block w-100" type="submit">Update approval</button></div>
+</form>
+</div>
+{% endblock%}

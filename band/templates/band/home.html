@@ -1,0 +1,97 @@
+{% extends 'band/base.html' %}
+{%load static%}
+{% block content%}
+
+<header>
+  <div class="container">
+    <div class="intro-text">
+      <div class="intro-lead-in">
+        <center>
+        <h3>Welcome To The Official Pinheads Website!</h3>
+        <br/>
+        <h1>WE NEED YOUR HELP TO FIND VENUES!</h1>
+      </center>
+      </div>
+  </div>
+</div>
+</header>
+<br/>
+<br/>
+<br/>
+<hr>
+<section id="about">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12 text-center">
+        <h2 class="text-uppercase">The Idea</h2>
+        <h3 class="section-subheading">This is what we were thinking. It will be great if you can help us out!</h3>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-12">
+        <ul class="list-group timeline">
+          <li class="list-group-item">
+            <div class="timeline-image"></div>
+            <div class="timeline-panel">
+              <div class="timeline-heading">
+                <h4>Step 1</h4>
+                <h4 class="subheading">Check Out Our Planned Events and Venues</h4>
+              </div>
+              <div class="timeline-body">
+                <p>We have booked some venues and created events around it, but we would love to perform in places where you can come watch. So <a class="nav-link" href="{% url 'list-events'%}"><strong>check out our events</strong></a> and venues, and check your schedule while you move on to step 2!</p>
+              </div>
+            </div>
+          </li>
+          <li class="list-group-item timeline-inverted">
+            <div class="timeline-image"></div>
+            <div class="timeline-panel">
+              <div class="timeline-heading">
+                <h4>Step 2</h4>
+                <h4 class="subheading">Register and Log in</h4>
+              </div>
+              <div class="timeline-body">
+                <p><a class="nav-link" href="{% url 'register_user'%}"><strong>Register as a new member</strong></a>, because if you don't, we won't be able to send you information about upcoming gigs and new merch releases. Even more important, you also wont be able to request events and venues (which is pretty cool and you should check it out in step 3).<br/>
+                If you checked your schedule in step 1 and want to join one of the already available events then cool! You'll get updated as the event time comes closer.<br/>
+                If those events and venues doesnt sound too hot, move on to step 3 and help us solve that issue!</p>
+              </div>
+            </div>
+          </li>
+          <li class="list-group-item">
+            <div class="timeline-image"></div>
+            <div class="timeline-panel">
+              <div class="timeline-heading">
+                <h4>Step 3</h4>
+                <h4 class="subheading">Request an Event and Add Some Venues</h4>
+              </div>
+              <div class="timeline-body">
+                <p>Now that you're logged in, more options are available to you in the navigation bar. You are now part of the inner Pinhead circle. Head on over to <a class="nav-link" href="{% url 'add_venue'%}"><strong>Request a Venue</strong></a> and send us a request. Come check back every now and again to see if its approved and then you are good to go! You can now also head over to <a class="nav-link" href="{% url 'add_event'%}"><strong>Request an Event</strong></a> in the navigation bar and ask us for a new event. If your venue from earlier was approved, you can now use this venue as an option!</p>
+              </div>
+            </div>
+          </li>
+          <li class="list-group-item timeline-inverted">
+            <div class="timeline-image"></div>
+            <div class="timeline-panel">
+              <div class="timeline-heading">
+                <h4>Step 5</h4>
+                <h4 class="subheading">Now We Jam</h4>
+              </div>
+              <div class="timeline-body">
+                <p>That's it! as long as you have an account you will be notified on new venues and events being added and you can join when the time comes, so lets get jamming!</p>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+<hr>
+<footer>
+  <div class="container">
+    <div class="row">
+      <div class="col"><span class="copyright">Copyright&nbsp;© Brand 2023</span></div>
+    </div>
+  </div>
+</footer>
+
+{% endblock%}

@@ -1,0 +1,18 @@
+{% extends 'band/base.html' %}
+{% block content%}
+<h1>Events Happening</h1>
+<br/>
+{% for event in event_list%}
+  {%if event.approved%}
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title">{{event}}</h4>
+        <h6 class="text-muted card-subtitle mb-2">Venue: {{event.venue}}</h6>
+        <p class="card-text">{{event.description}}</p>
+      </div>
+    </div>
+  {%endif%}
+<br/>
+<br/>
+{% endfor %}
+{% endblock%}
