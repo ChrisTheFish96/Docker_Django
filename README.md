@@ -25,7 +25,7 @@ This is a dockerized Django application with Sphinx documentation on the main ap
     * `source venv/Scripts/activate`
  
 1. Change the SECURITY KEY within settings.py to include your SECURITY KEY
-   ![settings screenshot](https://user-images.githubusercontent.com/125367266/230436180-d162aea2-9a9a-499b-b74f-c1fb3310d3e4.JPG)
+![settings screenshot](https://user-images.githubusercontent.com/125367266/230436180-d162aea2-9a9a-499b-b74f-c1fb3310d3e4.JPG)
   
 1 Build a docker image
     * `docker build --tag <image_name>:latest `
