@@ -18,7 +18,7 @@ This is a dockerized Django application with Sphinx documentation on the main ap
 1. Clone this repository
 
 1. Delete the .git folder
-  * `rm -rf .git/`
+    * `rm -rf .git/`
  
 1. Create a virtual environment and activate it
   * `virtualenv venv`
