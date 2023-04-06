@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>band.views &mdash; django_sphinx 00.00.01 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            django_sphinx
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">band</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">django_sphinx</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">band.views</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for band.views</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="kn">import</span> <span class="n">render</span>
+<span class="kn">from</span> <span class="nn">.models</span> <span class="kn">import</span> <span class="n">Event</span><span class="p">,</span> <span class="n">Venue</span>
+<span class="kn">from</span> <span class="nn">django.urls</span> <span class="kn">import</span> <span class="n">reverse</span>
+<span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="kn">import</span> <span class="n">render</span><span class="p">,</span> <span class="n">get_object_or_404</span>
+<span class="kn">from</span> <span class="nn">.forms</span> <span class="kn">import</span> <span class="n">VenueForm</span><span class="p">,</span> <span class="n">EventForm</span>
+<span class="kn">from</span> <span class="nn">django.http</span> <span class="kn">import</span> <span class="n">HttpResponseRedirect</span>
+<span class="kn">from</span> <span class="nn">django.contrib</span> <span class="kn">import</span> <span class="n">messages</span>
+
+	
+<div class="viewcode-block" id="admin_approval_venues"><a class="viewcode-back" href="../../band.html#band.views.admin_approval_venues">[docs]</a><span class="k">def</span> <span class="nf">admin_approval_venues</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;This method will be used by admins to approve venues</span>
+<span class="sd">		:returns: Redirects to home page with success message if successful</span>
+<span class="sd">		:rtype: URL redirection</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="n">venue_list</span> <span class="o">=</span> <span class="n">Venue</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+	<span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_superuser</span><span class="p">:</span>
+		<span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span><span class="o">==</span><span class="s2">&quot;POST&quot;</span><span class="p">:</span>
+			<span class="n">id_list</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">getlist</span><span class="p">(</span><span class="s1">&#39;boxes&#39;</span><span class="p">)</span>
+			<span class="c1"># Uncheck everything.</span>
+			<span class="n">venue_list</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">approved</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+			<span class="c1">#Updating the database.</span>
+			<span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">id_list</span><span class="p">:</span>
+				<span class="n">Venue</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">))</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">approved</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+			<span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Venue list approval updated.&quot;</span><span class="p">)</span>
+			<span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;band/home.html&#39;</span><span class="p">,</span> <span class="p">{})</span>	
+
+		<span class="k">else</span><span class="p">:</span>
+			<span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;band/admin_approval_venues.html&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;venue_list&#39;</span><span class="p">:</span><span class="n">venue_list</span><span class="p">})</span>
+	<span class="k">else</span><span class="p">:</span>
+		<span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;You aren&#39;t authorized to view this page.&quot;</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;band/home.html&#39;</span><span class="p">,</span> <span class="p">{})</span>
+	<span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;band/admin_approval_venues.html&#39;</span><span class="p">,</span> <span class="p">{})</span></div>
+
+<div class="viewcode-block" id="admin_approval_events"><a class="viewcode-back" href="../../band.html#band.views.admin_approval_events">[docs]</a><span class="k">def</span> <span class="nf">admin_approval_events</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;This method will be used by admins to approve events</span>
+<span class="sd">		:returns: Redirects to home page with success message if successful</span>
+<span class="sd">		:rtype: URL redirection</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="n">event_list</span> <span class="o">=</span> <span class="n">Event</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span> <span class="n">order_by</span><span class="p">(</span><span class="s1">&#39;-event_date&#39;</span><span class="p">)</span>
+	<span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">is_superuser</span><span class="p">:</span>
+		<span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span><span class="o">==</span><span class="s2">&quot;POST&quot;</span><span class="p">:</span>
+			<span class="n">id_list</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="o">.</span><span class="n">getlist</span><span class="p">(</span><span class="s1">&#39;boxes&#39;</span><span class="p">)</span>
+			<span class="c1"># Uncheck everything.</span>
+			<span class="n">event_list</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">approved</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+			<span class="c1">#Updating the database.</span>
+			<span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">id_list</span><span class="p">:</span>
+				<span class="n">Event</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">))</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">approved</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+			<span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;Event list approval updated.&quot;</span><span class="p">)</span>
+			<span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;band/home.html&#39;</span><span class="p">,</span> <span class="p">{})</span>	
+
+		<span class="k">else</span><span class="p">:</span>
+			<span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;band/admin_approval_events.html&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;event_list&#39;</span><span class="p">:</span><span class="n">event_list</span><span class="p">})</span>
+	<span class="k">else</span><span class="p">:</span>
+		<span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s2">&quot;You aren&#39;t authorized to view this page.&quot;</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;band/home.html&#39;</span><span class="p">,</span> <span class="p">{})</span>
+	<span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;band/admin_approval_events.html&#39;</span><span class="p">,</span> <span class="p">{})</span>	</div>
+
+<div class="viewcode-block" id="home"><a class="viewcode-back" href="../../band.html#band.views.home">[docs]</a><span class="k">def</span> <span class="nf">home</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;This method will be used to return to home screen</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;band/home.html&#39;</span><span class="p">,</span> <span class="p">{})</span></div>
+
+<div class="viewcode-block" id="all_events"><a class="viewcode-back" href="../../band.html#band.views.all_events">[docs]</a><span class="k">def</span> <span class="nf">all_events</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;This method will be used to view all approved events</span>
+<span class="sd">		:returns: Redirects to events page</span>
+<span class="sd">		:rtype: URL redirection</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="n">event_list</span> <span class="o">=</span> <span class="n">Event</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+	<span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;band/event_list.html&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;event_list&#39;</span><span class="p">:</span><span class="n">event_list</span><span class="p">})</span></div>
+
+<div class="viewcode-block" id="all_venues"><a class="viewcode-back" href="../../band.html#band.views.all_venues">[docs]</a><span class="k">def</span> <span class="nf">all_venues</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;This method will be used to view all approved venues</span>
+<span class="sd">		:returns: Redirects to venue page</span>
+<span class="sd">		:rtype: URL redirection</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="n">venue_list</span> <span class="o">=</span> <span class="n">Venue</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+	<span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;band/venue_list.html&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;event_list&#39;</span><span class="p">:</span><span class="n">event_list</span><span class="p">})</span></div>
+
+<div class="viewcode-block" id="add_event"><a class="viewcode-back" href="../../band.html#band.views.add_event">[docs]</a><span class="k">def</span> <span class="nf">add_event</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;This method will be used to request new events</span>
+<span class="sd">		:returns: Redirects to home page with success message if successful</span>
+<span class="sd">		:rtype: URL redirection</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="n">submitted</span> <span class="o">=</span> <span class="kc">False</span>
+	<span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
+		<span class="n">event_form</span> <span class="o">=</span> <span class="n">EventForm</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">)</span>
+		<span class="k">if</span> <span class="n">event_form</span><span class="o">.</span><span class="n">is_valid</span><span class="p">()</span> <span class="p">:</span>
+			<span class="n">event_form</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+			<span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;Request succesfully sent.&quot;</span><span class="p">))</span>
+			<span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;band/home.html&#39;</span><span class="p">)</span>
+	<span class="k">else</span><span class="p">:</span>
+		<span class="n">event_form</span> <span class="o">=</span> <span class="n">EventForm</span>
+		<span class="k">if</span> <span class="s1">&#39;submitted&#39;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">:</span>
+			<span class="n">submitted</span> <span class="o">=</span> <span class="kc">True</span>
+	<span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;band/add_event.html&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;event_form&#39;</span><span class="p">:</span><span class="n">event_form</span><span class="p">,</span> <span class="s1">&#39;submitted&#39;</span><span class="p">:</span><span class="n">submitted</span><span class="p">})</span></div>
+
+<div class="viewcode-block" id="add_venue"><a class="viewcode-back" href="../../band.html#band.views.add_venue">[docs]</a><span class="k">def</span> <span class="nf">add_venue</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+<span class="w">	</span><span class="sd">&quot;&quot;&quot;This method will be used to request new venues</span>
+<span class="sd">		:returns: Redirects to home page with success message if successful</span>
+<span class="sd">		:rtype: URL redirection</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+	<span class="n">submitted</span> <span class="o">=</span> <span class="kc">False</span>
+	<span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s2">&quot;POST&quot;</span><span class="p">:</span>
+		<span class="n">venue_form</span> <span class="o">=</span> <span class="n">VenueForm</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">POST</span><span class="p">)</span>
+		<span class="k">if</span> <span class="n">venue_form</span><span class="o">.</span><span class="n">is_valid</span><span class="p">():</span>
+			<span class="n">venue_form</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+			<span class="n">messages</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;Request succesfully sent.&quot;</span><span class="p">))</span>
+			<span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;band/home.html&#39;</span><span class="p">)</span>
+	<span class="k">else</span><span class="p">:</span>
+		<span class="n">venue_form</span> <span class="o">=</span> <span class="n">VenueForm</span>
+		<span class="k">if</span> <span class="s1">&#39;submitted&#39;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">GET</span><span class="p">:</span>
+			<span class="n">submitted</span> <span class="o">=</span> <span class="kc">True</span>
+		<span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="s1">&#39;band/add_venue.html&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;venue_form&#39;</span><span class="p">:</span> <span class="n">venue_form</span><span class="p">,</span> <span class="s1">&#39;submitted&#39;</span><span class="p">:</span><span class="n">submitted</span><span class="p">})</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Christopher Barnard.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
