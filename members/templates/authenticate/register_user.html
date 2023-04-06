@@ -1,0 +1,40 @@
+{% extends 'band/base.html' %}
+
+{% block content%}
+
+{% if form.errors %}
+  <div>
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+    <strong>There was an error with your form...</strong>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+{%endif%}
+
+<div class="container">
+  <section class="py-4 py-xl-5">
+    <div class="container">
+      <div class="row mb-5">
+        <div class="col-md-8 col-xl-6 text-center mx-auto">
+          <h1>Register as a new member</h1>
+          <br/>
+          <p>Become a member and let us know where you want us to play!</p>
+        </div>
+      </div>
+      <div class="row d-flex justify-content-center">
+        <div class="col-md-10 col-xl-8">
+          <div class="card mb-5">
+            <div class="card-body d-flex flex-column align-items-center">  
+              <form action="{% url 'register_user'%}" method = POST>
+                {% csrf_token %}
+                {{form.as_p}}
+                <br/><br/>
+                <div class="mb-3"><button class="btn btn-primary d-block w-100" type="submit">Become a member</button></div>
+              </form>    
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+{% endblock%}
